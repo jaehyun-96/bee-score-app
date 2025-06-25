@@ -50,7 +50,7 @@ def load_data():
 
     with zipfile.ZipFile("merged_bee_ready.zip") as z:
         with z.open("merged_bee_ready.csv") as f:
-            df = pd.read_csv(io.TextIOWrapper(f, encoding='utf-8'))
+            df = pd.read_csv(f, dtype=str, encoding='utf-8')
 
     mapping = pd.read_csv("bee_mapped_ingredients.csv")
     return df, mapping
