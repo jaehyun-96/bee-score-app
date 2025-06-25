@@ -3,6 +3,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import datetime
 from PIL import Image
+import gdown, zipfile
 
 # ─────────────────────────────────────────────
 # ✅ 세션 상태 설정
@@ -40,11 +41,17 @@ def normalize(text: str) -> str:
     return text.lower()
 
 # ─────────────────────────────────────────────
-# ✅ 2. 데이터 로드
+# ✅ 2. 데이터 로드 (Google Drive ZIP 사용)
 # ─────────────────────────────────────────────
 @st.cache_data
 def load_data():
-    df = pd.read_csv("merged_bee_ready.csv")
+    zip_url = "https://drive.google.com/uc?id=1v7nNYDUl0OSmJ75PSBuOFb5bPy-aLPRt"
+    gdown.download(zip_url, "merged_bee_ready.zip", quiet=False)
+
+    with zipfile.ZipFile("merged_bee_ready.zip") as z:
+        with z.open("merged_bee_ready.csv") as f:
+            df = pd.read_csv(f)
+
     mapping = pd.read_csv("bee_mapped_ingredients.csv")
     return df, mapping
 
